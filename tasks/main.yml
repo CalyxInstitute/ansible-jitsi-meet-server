@@ -1,0 +1,37 @@
+---
+# tasks file for jitsi-meet
+- name: Install Jitsi apt repo                                            
+  copy:                                                                         
+    src: jitsi.list                                                       
+    dest: /etc/apt/sources.list.d/jitsi.list                                      
+
+- name: Add signing key for Jitsi repository 
+  apt_key:                                                                      
+    keyserver: keys.gnupg.net                                                   
+    id: C697D823EB0AB654
+
+- name: Install Jitsi Meet
+  apt:                                                                          
+    name: jitsi-meet                                                     
+    state: present
+    update_cache: yes
+
+- name: Apply patches to remove third party resources                           
+  patch:                                                                        
+    src: "{{ item }}"                                                           
+    basedir: /usr/share/jitsi-meet                         
+  with_items:                                                                   
+    - 0001-Ripped-out-all-references-to-CallStats.io.patch                      
+    - 0001-Remove-Google-Analytics.patch                                        
+    - 0001-Removed-Gravatar-images.patch                                        
+  ignore_errors: true
+
+- name: Deactivate the default nginx site
+  file: 
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Reload nginx
+  service:
+    name: nginx
+    state: reloaded

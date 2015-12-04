@@ -1,0 +1,80 @@
+From b96dd151998506178f9bdb80ea0b7993bb3a6f2d Mon Sep 17 00:00:00 2001
+From: Micah Lee <micah@micahflee.com>
+Date: Thu, 17 Sep 2015 13:35:24 -0700
+Subject: [PATCH] Removed Gravatar images
+
+---
+ index.html                  |   2 +-
+ modules/UI/avatar/Avatar.js |  26 +++++++++-----------------
+ 2 files changed, 10 insertions(+), 18 deletions(-)
+
+diff --git index.html index.html
+index 6020e71..5d933b3 100644
+--- index.html
++++ index.html
+@@ -226,7 +226,7 @@
+         </div>
+         <div id="settingsmenu" class="right-panel">
+             <div class="icon-settings" data-i18n="settings.title"></div>
+-            <img id="avatar" src="https://www.gravatar.com/avatar/87291c37c25be69a072a4514931b1749?d=wavatar&size=30"/>
++            <img id="avatar" src="/images/avatar-30.png"/>
+             <div class="arrow-up"></div>
+             <input type="text" id="setDisplayName" data-i18n="[placeholder]settings.name" placeholder="Name">
+             <input type="text" id="setEmail" placeholder="E-Mail">
+diff --git modules/UI/avatar/Avatar.js modules/UI/avatar/Avatar.js
+index 6ab1327..946ad9f 100644
+--- modules/UI/avatar/Avatar.js
++++ modules/UI/avatar/Avatar.js
+@@ -30,39 +30,31 @@ var Avatar = {
+      * @param jid full MUC jid of the user for whom we want to obtain avatar URL
+      */
+     getActiveSpeakerUrl: function (jid) {
+-        return this.getGravatarUrl(jid, 100);
++        return this.getUrl(jid, 100);
+     },
+     /**
+      * Returns image URL for the avatar to be displayed on small video thumbnail
+      * @param jid full MUC jid of the user for whom we want to obtain avatar URL
+      */
+     getThumbUrl: function (jid) {
+-        return this.getGravatarUrl(jid, 100);
++        return this.getUrl(jid, 100);
+     },
+     /**
+      * Returns the URL for the avatar to be displayed as contactlist item
+      * @param jid full MUC jid of the user for whom we want to obtain avatar URL
+      */
+     getContactListUrl: function (jid) {
+-        return this.getGravatarUrl(jid, 30);
++        return this.getUrl(jid, 30);
+     },
+-    getGravatarUrl: function (jid, size) {
+-        if (!jid) {
+-            console.error("Get gravatar - jid is undefined");
+-            return null;
++    getUrl: function (jid, size) {
++        if(size == 100) {
++            return '/images/avatar-100.png';
++        } else {
++            return '/images/avatar-30.png';
+         }
+-        var id = users[jid];
+-        if (!id) {
+-            console.warn(
+-                "No avatar stored yet for " + jid + " - using JID as ID");
+-            id = jid;
+-        }
+-        return 'https://www.gravatar.com/avatar/' +
+-            MD5.hexdigest(id.trim().toLowerCase()) +
+-            "?d=wavatar&size=" + (size || "30");
+     }
+ 
+ };
+ 
+ 
+-module.exports = Avatar;
+\ No newline at end of file
++module.exports = Avatar;
+-- 
+2.1.4
+

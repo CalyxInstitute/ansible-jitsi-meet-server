@@ -1,0 +1,201 @@
+From 4846f7910add1421a62da17c89e3fb0820b72e45 Mon Sep 17 00:00:00 2001
+From: Micah Lee <micah@micahflee.com>
+Date: Thu, 17 Sep 2015 13:43:33 -0700
+Subject: [PATCH] Ripped out all references to CallStats.io
+
+---
+ config.js                        |  6 ----
+ debian/patches/jquery-package    |  1 -
+ index.html                       |  1 -
+ modules/statistics/CallStats.js  | 77 ----------------------------------------
+ modules/statistics/statistics.js |  9 +----
+ package.json                     |  1 -
+ 6 files changed, 1 insertion(+), 94 deletions(-)
+ delete mode 100644 modules/statistics/CallStats.js
+
+diff --git config.js config.js
+index cc05061..a63c7bc 100644
+--- config.js
++++ config.js
+@@ -57,10 +57,4 @@ var config = {
+ //    startAudioMuted: 10, //every participant after the Nth will start audio muted
+ //    startVideoMuted: 10, //every participant after the Nth will start video muted
+ //    defaultLanguage: "en",
+-// To enable sending statistics to callstats.io you should provide Applicaiton ID and Secret.
+-//    callStatsID: "",//Application ID for callstats.io API
+-//    callStatsSecret: ""//Secret for callstats.io API
+-    /*noticeMessage: 'Service update is scheduled for 16th March 2015. ' +
+-    'During that time service will not be available. ' +
+-    'Apologise for inconvenience.'*/
+ };
+diff --git debian/patches/jquery-package debian/patches/jquery-package
+index ef0750c..eb51c3b 100644
+--- debian/patches/jquery-package
++++ debian/patches/jquery-package
+@@ -6,7 +6,6 @@ Index: jitsi-meet/index.html
+ @@ -10,14 +10,14 @@
+      <meta itemprop="description" content="Join a WebRTC video conference powered by the Jitsi Videobridge"/>
+      <meta itemprop="image" content="/images/jitsilogo.png"/>
+-     <script src="https://api.callstats.io/static/callstats.min.js"></script>
+ -    <script src="libs/jquery-2.1.1.min.js"></script>
+ +    <script src="libs/jquery.min.js"></script>
+      <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+diff --git index.html index.html
+index d2ba66e..537a99c 100644
+--- index.html
++++ index.html
+@@ -9,7 +9,6 @@
+     <meta itemprop="name" content="Jitsi Meet"/>
+     <meta itemprop="description" content="Join a WebRTC video conference powered by the Jitsi Videobridge"/>
+     <meta itemprop="image" content="/images/jitsilogo.png"/>
+-    <script src="https://api.callstats.io/static/callstats.min.js"></script>
+     <script src="libs/jquery-2.1.1.min.js"></script>
+     <script src="config.js?v=13"></script><!-- adapt to your needs, i.e. set hosts and bosh path -->
+     <script src="libs/strophe/strophe.min.js?v=2"></script>
+diff --git modules/statistics/CallStats.js modules/statistics/CallStats.js
+deleted file mode 100644
+index 1adc708..0000000
+--- modules/statistics/CallStats.js
++++ /dev/null
+@@ -1,77 +0,0 @@
+-/* global config, $, APP, Strophe, callstats */
+-var jsSHA = require('jssha');
+-var io = require('socket.io-client');
+-var callStats = null;
+-
+-function initCallback (err, msg) {
+-    console.log("Initializing Status: err="+err+" msg="+msg);
+-}
+-
+-var CallStats = {
+-    init: function (jingleSession) {
+-
+-        if(!config.callStatsID || !config.callStatsSecret || callStats !== null)
+-            return;
+-
+-        callStats = new callstats($, io, jsSHA);
+-
+-        this.session = jingleSession;
+-        this.peerconnection = jingleSession.peerconnection.peerconnection;
+-
+-        this.userID =  APP.xmpp.myResource();
+-
+-        var location = window.location;
+-        this.confID = location.hostname + location.pathname;
+-
+-        //userID is generated or given by the origin server
+-        callStats.initialize(config.callStatsID,
+-            config.callStatsSecret,
+-            this.userID,
+-            initCallback);
+-
+-        var usage = callStats.fabricUsage.multiplex;
+-
+-        callStats.addNewFabric(this.peerconnection,
+-            Strophe.getResourceFromJid(jingleSession.peerjid),
+-            usage,
+-            this.confID,
+-            this.pcCallback.bind(this));
+-    },
+-    pcCallback: function (err, msg) {
+-        if (!callStats)
+-            return;
+-        console.log("Monitoring status: "+ err + " msg: " + msg);
+-        callStats.sendFabricEvent(this.peerconnection,
+-            callStats.fabricEvent.fabricSetup, this.confID);
+-    },
+-    sendMuteEvent: function (mute, type) {
+-        if (!callStats)
+-            return;
+-        var event = null;
+-        if (type === "video") {
+-            event = (mute? callStats.fabricEvent.videoPause :
+-                callStats.fabricEvent.videoResume);
+-        }
+-        else {
+-            event = (mute? callStats.fabricEvent.audioMute :
+-                callStats.fabricEvent.audioUnmute);
+-        }
+-        callStats.sendFabricEvent(this.peerconnection, event, this.confID);
+-    },
+-    sendTerminateEvent: function () {
+-        if(!callStats) {
+-            return;
+-        }
+-        callStats.sendFabricEvent(this.peerconnection,
+-            callStats.fabricEvent.fabricTerminated, this.confID);
+-    },
+-    sendSetupFailedEvent: function () {
+-        if(!callStats) {
+-            return;
+-        }
+-        callStats.sendFabricEvent(this.peerconnection,
+-            callStats.fabricEvent.fabricSetupFailed, this.confID);
+-    }
+-
+-};
+-module.exports = CallStats;
+\ No newline at end of file
+diff --git modules/statistics/statistics.js modules/statistics/statistics.js
+index b330540..71cf022 100644
+--- modules/statistics/statistics.js
++++ modules/statistics/statistics.js
+@@ -7,7 +7,6 @@ var RTPStats = require("./RTPStatsCollector.js");
+ var EventEmitter = require("events");
+ var StreamEventTypes = require("../../service/RTC/StreamEventTypes.js");
+ var XMPPEvents = require("../../service/xmpp/XMPPEvents");
+-var CallStats = require("./CallStats");
+ var RTCEvents = require("../../service/RTC/RTCEvents");
+ 
+ var eventEmitter = new EventEmitter();
+@@ -51,7 +50,6 @@ function onStreamCreated(stream) {
+ }
+ 
+ function onDisposeConference(onUnload) {
+-    CallStats.sendTerminateEvent();
+     stopRemote();
+     if(onUnload) {
+         stopLocal();
+@@ -120,20 +118,15 @@ var statistics = {
+         // onnegotiationneeded
+         APP.xmpp.addListener(XMPPEvents.CALL_INCOMING, function (event) {
+             startRemoteStats(event.peerconnection);
+-//            CallStats.init(event);
+         });
+         APP.xmpp.addListener(XMPPEvents.PEERCONNECTION_READY,
+             function (session) {
+-            CallStats.init(session);
+         });
+         APP.RTC.addListener(RTCEvents.AUDIO_MUTE, function (mute) {
+-            CallStats.sendMuteEvent(mute, "audio");
+         });
+         APP.xmpp.addListener(XMPPEvents.CONFERENCE_SETUP_FAILED, function () {
+-            CallStats.sendSetupFailedEvent();
+         });
+         APP.RTC.addListener(RTCEvents.VIDEO_MUTE, function (mute) {
+-            CallStats.sendMuteEvent(mute, "video");
+         });
+     }
+ };
+@@ -141,4 +134,4 @@ var statistics = {
+ 
+ 
+ 
+-module.exports = statistics;
+\ No newline at end of file
++module.exports = statistics;
+diff --git package.json package.json
+index 5375a54..2c8388b 100644
+--- package.json
++++ package.json
+@@ -14,7 +14,6 @@
+   ],
+   "author": "",
+   "readmeFilename": "README.md",
+-  "//": "Callstats.io does not work with recent versions of jsSHA (2.0.1 in particular)",
+   "dependencies": {
+       "events": "*",
+       "pako": "*",
+-- 
+2.1.4
+
