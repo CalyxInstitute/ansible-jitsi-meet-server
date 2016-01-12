@@ -1,33 +1,33 @@
 ---
 # tasks file for jitsi-meet
 - name: Install some dependencies for Jitsi Meet
-  apt:                                                                          
-    name: "{{ item }}"                                                          
-    state: present    
-  with_items:                                      
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
     - git
     - build-essential
 
-- name: Install some dependencies for Jitsi Meet                                
-  apt:                                                                          
-    name: "{{ item }}"                                                          
+- name: Install some dependencies for Jitsi Meet
+  apt:
+    name: "{{ item }}"
     state: present
-    update_cache: yes                                                              
-  with_items:                                                                   
+    update_cache: yes
+  with_items:
     - nodejs-legacy
     - npm
 
 - name: Clone git repository for Jitsi Meet
-  git:                                                                          
+  git:
     repo: https://github.com/jitsi/jitsi-meet
     dest: /var/www/jitsi
     version: master
-    force: yes                                            
+    force: yes
     depth: 1
- 
+
 - name: Install Node.js dependencies
   command: npm install --production
-  args:                                      
+  args:
     chdir: /var/www/jitsi
 
 - name: Disable third party resources
@@ -37,8 +37,8 @@
     line: "   disableThirdPartyRequests: true"
     state: present
 
-- name: Build the Jitsi Meet application                                        
-  command: make                                                                 
-  args:                                                                         
+- name: Build the Jitsi Meet application
+  command: make
+  args:
     chdir: /var/www/jitsi
   ignore_errors: yes

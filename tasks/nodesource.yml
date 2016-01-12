@@ -1,10 +1,10 @@
 ---
-- name: Install NodeSource apt repo                                             
-  copy:                                                                         
-    src: nodesource.list                                                        
-    dest: /etc/apt/sources.list.d/nodesource.list                               
-                                                                                
-- name: Add signing key for NodeSource                                          
-  apt_key:                                                                      
-    keyserver: keys.gnupg.net                                                   
+- name: Install NodeSource apt repo
+  copy:
+    src: nodesource.list
+    dest: /etc/apt/sources.list.d/nodesource.list
+
+- name: Add signing key for NodeSource
+  apt_key:
+    keyserver: keys.gnupg.net
     id: 1655A0AB68576280
