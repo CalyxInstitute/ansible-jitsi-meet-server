@@ -10,5 +10,5 @@ galaxy_info:
       versions:
       - jessie
   categories:
-    - syste
+    - system
 dependencies: []
