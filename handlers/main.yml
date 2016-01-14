@@ -1,2 +1,6 @@
 ---
 # handlers file for jitsi-meet
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted

@@ -1,44 +1,83 @@
 ---
 # tasks file for jitsi-meet
-- name: Install some dependencies for Jitsi Meet
-  apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - git
-    - build-essential
+- name: Install Jitsi apt repo
+  copy:
+    src: jitsi.list
+    dest: /etc/apt/sources.list.d/jitsi.list
 
-- name: Install some dependencies for Jitsi Meet
+- name: Add signing key for Jitsi repository
+  apt_key:
+    keyserver: keys.gnupg.net
+    id: C697D823EB0AB654
+
+- name: Install Jitsi Meet
   apt:
-    name: "{{ item }}"
+    name: jitsi-meet
     state: present
     update_cache: yes
-  with_items:
-    - nodejs-legacy
-    - npm
-
-- name: Clone git repository for Jitsi Meet
-  git:
-    repo: https://github.com/jitsi/jitsi-meet
-    dest: /var/www/jitsi
-    version: master
-    force: yes
-    depth: 1
-
-- name: Install Node.js dependencies
-  command: npm install --production
-  args:
-    chdir: /var/www/jitsi
 
 - name: Disable third party resources
   lineinfile:
-    dest: /var/www/jitsi/config.js
+    dest: /etc/jitsi/meet/localhost-config.js
     regexp: "^    disableThirdPartyRequests"
-    line: "   disableThirdPartyRequests: true"
+    line: "   disableThirdPartyRequests: true,"
     state: present
 
-- name: Build the Jitsi Meet application
-  command: make
-  args:
-    chdir: /var/www/jitsi
-  ignore_errors: yes
+- name: Set the Jitsi Meet hostname
+  lineinfile:
+    dest: /etc/jitsi/meet/localhost-config.js
+    regexp: "^        domain: "
+    line: "        domain: '{{ jitsi_meet_hostname }}',"
+    state: present
+
+- name: Update the SSL cert and key
+  lineinfile:
+    dest: /etc/nginx/sites-enabled/localhost.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: "^    ssl_certificate "
+      line: "    ssl_certificate {{ ssl_cert_path }};"
+    - regexp: "^    ssl_certificate_key "
+      line: "    ssl_certificate_key {{ ssl_key_path }};"
+  notify: restart nginx
+
+- name: Deactivate the default nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Reload nginx
+  service:
+    name: nginx
+    state: reloaded
+
+# the following task depends upon the fpf-hardening role
+- name: Configure automatic upgrades for Jitsi Meet
+  lineinfile:
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    insertafter: "^        \"o=Debian,n=jessie,l=Debian-Security\";"
+    line: "        \"o=jitsi.org,a=unstable\";"
+    state: present
+
+- name: Install ufw package.
+  apt:
+    name: ufw
+    state: present
+
+- name: Specify allowed ports in firewall config.
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  with_items:
+    - 22
+    - 80
+    - 443
+  notify: reload ufw
+
+- name: Ensure UFW is running.
+  ufw:
+    name: ufw
+    state: enabled
