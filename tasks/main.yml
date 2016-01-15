@@ -20,7 +20,7 @@
   lineinfile:
     dest: /etc/jitsi/meet/localhost-config.js
     regexp: "^    disableThirdPartyRequests"
-    line: "   disableThirdPartyRequests: true,"
+    line: "    disableThirdPartyRequests: true,"
     state: present
 
 - name: Set the Jitsi Meet hostname
