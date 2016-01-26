@@ -84,7 +84,13 @@
     - 80
     - 443
     - 4443
-    - 10000
+  notify: reload ufw
+
+- name: Open UDP port 10000 for jitsi-videobridge
+  ufw:
+    rule: allow
+    port: 10000
+    proto: udp
   notify: reload ufw
 
 - name: Ensure UFW is running.
