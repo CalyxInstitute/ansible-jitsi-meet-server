@@ -1,5 +1,4 @@
 ---
-# tasks file for jitsi-meet
 - name: Install Jitsi apt repo
   copy:
     src: jitsi.list
@@ -9,6 +8,15 @@
   apt_key:
     keyserver: keys.gnupg.net
     id: C697D823EB0AB654
+
+- name: Install Java JRE
+  apt:
+    name: default-jre-headless
+    state: present
+
+- name: Disable MEMPROTECT on Java
+  command: paxctl -cm /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
+  ignore_errors: yes
 
 - name: Install Jitsi Meet
   apt:
@@ -75,6 +83,8 @@
     - 22
     - 80
     - 443
+    - 4443
+    - 10000
   notify: reload ufw
 
 - name: Ensure UFW is running.
