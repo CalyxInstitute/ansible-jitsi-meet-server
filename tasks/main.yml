@@ -66,7 +66,7 @@
   lineinfile:
     dest: /etc/apt/apt.conf.d/50unattended-upgrades
     insertafter: "^        \"o=Debian,n=jessie,l=Debian-Security\";"
-    line: "        \"o=jitsi.org,a=unstable\";"
+    line: "        \"o=jitsi.org,l=Jitsi Debian packages repository\";"
     state: present
 
 - name: Install ufw package.
