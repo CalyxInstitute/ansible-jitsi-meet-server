@@ -57,14 +57,6 @@
     state: absent
   notify: restart nginx
 
-# the following task depends upon the fpf-hardening role
-- name: Configure automatic upgrades for Jitsi Meet
-  lineinfile:
-    dest: /etc/apt/apt.conf.d/50unattended-upgrades
-    insertafter: "^        \"o=Debian,n=jessie,l=Debian-Security\";"
-    line: "        \"o=jitsi.org,l=Jitsi Debian packages repository\";"
-    state: present
-
 - name: Install ufw package.
   apt:
     name: ufw
