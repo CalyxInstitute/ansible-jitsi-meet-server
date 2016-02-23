@@ -1,0 +1,14 @@
+---
+- name: Disable third party resources
+  lineinfile:
+    dest: /etc/jitsi/meet/localhost-config.js
+    regexp: "^    disableThirdPartyRequests"
+    line: "    disableThirdPartyRequests: true,"
+    state: present
+
+- name: Set the Jitsi Meet hostname
+  lineinfile:
+    dest: /etc/jitsi/meet/localhost-config.js
+    regexp: "^        domain: "
+    line: "        domain: '{{ jitsi_meet_hostname }}',"
+    state: present

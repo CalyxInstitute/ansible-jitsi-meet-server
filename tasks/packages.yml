@@ -1,0 +1,25 @@
+---
+- name: Install Java JRE
+  apt:
+    name: default-jre-headless
+    state: present
+
+- name: Add signing key for Jitsi repository
+  apt_key:
+    keyserver: keys.gnupg.net
+    id: C697D823EB0AB654
+
+- name: Install Jitsi apt repo
+  apt_repository:
+    repo: 'deb http://download.jitsi.org/nightly/deb unstable/'
+    state: present
+
+- name: Disable MEMPROTECT on Java
+  command: paxctl -cm /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
+  ignore_errors: yes
+
+- name: Install Jitsi Meet
+  apt:
+    name: jitsi-meet
+    state: present
+    update_cache: yes

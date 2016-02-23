@@ -1,0 +1,20 @@
+---
+- name: Update the SSL cert and key
+  lineinfile:
+    dest: /etc/nginx/sites-enabled/localhost.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: "^    ssl_certificate "
+      line: "    ssl_certificate {{ ssl_cert_path }};"
+    - regexp: "^    ssl_certificate_key "
+      line: "    ssl_certificate_key {{ ssl_key_path }};"
+  notify: restart nginx
+
+- name: Deactivate the default nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: restart nginx
+
