@@ -1,0 +1,5 @@
+---
+- name: Test jitsi-meet role
+  hosts: all
+  roles:
+    - role: jitsi-meet
