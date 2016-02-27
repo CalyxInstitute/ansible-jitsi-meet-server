@@ -7,9 +7,9 @@
     state: present
   with_items:
     - regexp: "^    ssl_certificate "
-      line: "    ssl_certificate {{ ssl_cert_path }};"
+      line: "    ssl_certificate {{ jitsi_meet_ssl_cert_path }};"
     - regexp: "^    ssl_certificate_key "
-      line: "    ssl_certificate_key {{ ssl_key_path }};"
+      line: "    ssl_certificate_key {{ jitsi_meet_ssl_key_path }};"
   notify: restart nginx
 
 - name: Deactivate the default nginx site
