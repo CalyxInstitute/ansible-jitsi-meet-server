@@ -7,8 +7,13 @@
     state: present
 
 - name: Set the Jitsi Meet hostname
-  lineinfile:
+  replace:
     dest: /etc/jitsi/meet/localhost-config.js
-    regexp: "^        domain: "
-    line: "        domain: '{{ jitsi_meet_hostname }}',"
-    state: present
+    regexp: "^(.*')localhost('.*)"
+    replace: "\\1{{ jitsi_meet_hostname }}\\2"
+
+- name: Symlink Jitsi config by domain name.
+  file:
+    path: "/etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js"
+    state: link
+    src: /etc/jitsi/meet/localhost-config.js
