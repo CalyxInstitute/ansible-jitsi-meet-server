@@ -13,29 +13,19 @@
     replace: "\\1{{ jitsi_meet_server_name }}\\2"
 
 - name: Configure Prosody.
-  lineinfile:
-    dest: /etc/prosody/prosody.cfg.lua
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    validate: "luac -p %s"
-    state: present
-  with_items:
-    - regexp: '^c2s_require_encryption'
-      line: 'c2s_require_encryption = true'
-    - regexp: '^s2s_secure_auth'
-      line: 's2s_secure_auth = true'
-    - regexp: '^[\s-]+"bosh"'
-      # Config file uses tabs, not spaces, but templating that string is wonky.
-      # Confirmed that prosody doesn't choke on the whitespace discrepancy.
-      line: '        "bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"'
-    - regexp: '^VirtualHost'
-      line: 'VirtualHost "{{ jitsi_meet_server_name }}"'
-    - regexp: '^authentication'
-      line: 'authentication = "anonymous"'
-      # TODO: remove "enabled = false" immediately below VirtualHost
-      # TODO: set SSL keys under VirtualHost
-      # TODO: set 'authentication = "anonymous"' immediately below VirtualHost
-      # TODO: just use a template already
+  template:
+    src: prosody_config.j2
+    dest: "/etc/prosody/conf.avail/{{ jitsi_meet_server_name }}.cfg.lua"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart prosody
+
+- name: Symlink Prosody config by domain name.
+  file:
+    path: "/etc/prosody/conf.d/{{ jitsi_meet_server_name }}.cfg.lua"
+    state: link
+    src: "/etc/prosody/conf.avail/{{ jitsi_meet_server_name }}.cfg.lua"
   notify: restart prosody
 
 - name: Symlink Jitsi config by domain name.
