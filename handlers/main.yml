@@ -9,3 +9,8 @@
   service:
     name: prosody
     state: restarted
+
+- name: restart jicofo
+  service:
+    name: jicofo
+    state: restarted

@@ -21,6 +21,21 @@
     mode: "0644"
   notify: restart prosody
 
+- name: Set hostname in Jicofo config.
+  lineinfile:
+    dest: /etc/jitsi/jicofo/config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: '^JICOFO_HOST='
+      line: "JICOFO_HOST={{ jitsi_meet_server_name }}"
+    - regexp: '^JICOFO_HOSTNAME='
+      line: "JICOFO_HOSTNAME={{ jitsi_meet_server_name }}"
+    - regexp: '^JICOFO_AUTH_DOMAIN='
+      line: "JICOFO_AUTH_DOMAIN=auth.{{ jitsi_meet_server_name }}"
+  notify: restart jicofo
+
 - name: Symlink Prosody config by domain name.
   file:
     path: "/etc/prosody/conf.d/{{ jitsi_meet_server_name }}.cfg.lua"
