@@ -4,3 +4,8 @@
   service:
     name: nginx
     state: restarted
+
+- name: restart prosody
+  service:
+    name: prosody
+    state: restarted
