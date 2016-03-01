@@ -33,26 +33,3 @@
       line: "JVB_SECRET={{ jitsi_meet_videobridge_secret }}"
   notify: restart jitsi-videobridge
 
-- name: Set debconf options for jitsi-meet.
-  debconf:
-    name: "{{ item.name }}"
-    question: "{{ item.question }}"
-    value: "{{ item.value }}"
-    vtype: "{{ item.vtype }}"
-  with_items:
-    - name: jitsi-meet
-      question: jitsi-meet/jvb-hostname
-      value: "{{ jitsi_meet_server_name }}"
-      vtype: string
-    - name: jitsi-meet
-      question: jitsi-meet/jvb-serve
-      value: "false"
-      vtype: boolean
-    - name: jitsi-meet-prosody
-      question: jitsi-meet-prosody/jvb-hostname
-      value: "{{ jitsi_meet_server_name }}"
-      vtype: string
-  notify:
-    - restart jitsi-videobridge
-    - restart jicofo
-    - restart prosody
