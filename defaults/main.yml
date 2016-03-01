@@ -18,3 +18,5 @@ jitsi_meet_jicofo_user: focus
 jitsi_meet_jicofo_port: 5347
 
 jitsi_meet_videobridge_port: 5347
+
+jitsi_meet_disable_third_party_requests: true
