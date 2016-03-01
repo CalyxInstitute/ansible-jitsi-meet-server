@@ -1,21 +1,11 @@
 ---
 - name: Set hostname in Jicofo config.
-  lineinfile:
+  template:
     dest: /etc/jitsi/jicofo/config
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
-  with_items:
-    - regexp: '^JICOFO_HOST='
-      line: "JICOFO_HOST=localhost"
-    - regexp: '^JICOFO_HOSTNAME='
-      line: "JICOFO_HOSTNAME={{ jitsi_meet_server_name }}"
-    - regexp: '^JICOFO_AUTH_DOMAIN='
-      line: "JICOFO_AUTH_DOMAIN=auth.{{ jitsi_meet_server_name }}"
-    - regexp: '^JICOFO_SECRET='
-      line: "JICOFO_SECRET={{ jitsi_meet_jicofo_secret }}"
-    - regexp: '^JICOFO_AUTH_PASSWORD='
-      line: "JICOFO_AUTH_PASSWORD={{ jitsi_meet_jicofo_password }}"
+    src: jicofo_config.j2
+    owner: root
+    group: root
+    mode: "0644"
   notify: restart jicofo
 
 - name: Set hostname in Videobridge config.
