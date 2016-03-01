@@ -1,6 +1,8 @@
 ---
 - include: packages.yml
 
+- include: prosody.yml
+
 - include: configure.yml
 
 - include: nginx.yml
