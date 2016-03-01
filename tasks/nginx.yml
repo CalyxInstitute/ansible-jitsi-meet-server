@@ -1,7 +1,7 @@
 ---
 - name: Update the SSL cert and key
   lineinfile:
-    dest: /etc/nginx/sites-enabled/localhost.conf
+    dest: "/etc/nginx/sites-enabled/{{ jitsi_meet_server_name }}.conf"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present

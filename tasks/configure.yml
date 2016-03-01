@@ -1,25 +1,26 @@
 ---
-- name: Disable third party resources
-  lineinfile:
-    dest: /etc/jitsi/meet/localhost-config.js
-    regexp: "^    disableThirdPartyRequests"
-    line: "    disableThirdPartyRequests: true,"
-    state: present
+- name: Copy default Jitsi meet config file.
+  command: >
+    cp /etc/jitsi/meet/localhost-config.js
+       /etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js
+  args:
+    creates: "/etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js"
+  notify: restart jitsi-videobridge
 
 - name: Set the Jitsi Meet hostname
   replace:
-    dest: /etc/jitsi/meet/localhost-config.js
+    dest: "/etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js"
     regexp: "^(.*)localhost(.*)"
     replace: "\\1{{ jitsi_meet_server_name }}\\2"
+  notify: restart jitsi-videobridge
 
-- name: Configure Prosody.
-  template:
-    src: prosody_config.j2
-    dest: "/etc/prosody/conf.avail/{{ jitsi_meet_server_name }}.cfg.lua"
-    owner: root
-    group: root
-    mode: "0644"
-  notify: restart prosody
+- name: Disable third party resources in Jitsi Meet config.
+  lineinfile:
+    dest: "/etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js"
+    regexp: "^    disableThirdPartyRequests"
+    line: "    disableThirdPartyRequests: true,"
+    state: present
+  notify: restart jitsi-videobridge
 
 - name: Set hostname in Jicofo config.
   lineinfile:
@@ -40,12 +41,6 @@
       line: "JICOFO_AUTH_PASSWORD={{ jitsi_meet_jicofo_password }}"
   notify: restart jicofo
 
-- name: Register Jicofo user with Prosody service.
-  command: >
-    prosodyctl register focus
-    auth.{{ jitsi_meet_server_name }} {{ jitsi_meet_jicofo_password }}
-  notify: restart prosody
-
 - name: Set hostname in Videobridge config.
   lineinfile:
     dest: /etc/jitsi/videobridge/config
@@ -61,6 +56,15 @@
       line: "JVB_SECRET={{ jitsi_meet_videobridge_secret }}"
   notify: restart jitsi-videobridge
 
+- name: Copy Prosody config template.
+  template:
+    src: prosody_config.j2
+    dest: "/etc/prosody/conf.avail/{{ jitsi_meet_server_name }}.cfg.lua"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart prosody
+
 - name: Symlink Prosody config by domain name.
   file:
     path: "/etc/prosody/conf.d/{{ jitsi_meet_server_name }}.cfg.lua"
@@ -68,11 +72,31 @@
     src: "/etc/prosody/conf.avail/{{ jitsi_meet_server_name }}.cfg.lua"
   notify: restart prosody
 
-- name: Symlink Jitsi config by domain name.
+- name: Remove Jicofo user config for localhost site
   file:
-    path: "/etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js"
-    state: link
-    src: /etc/jitsi/meet/localhost-config.js
+    # Yes, prosody actually URL-escapes the directory name for some reason.
+    path: /var/lib/prosody/auth%2elocalhost
+    state: absent
+  notify: restart prosody
+
+- name: Register Jicofo user with Prosody service.
+  template:
+    src: prosody_focus_auth.j2
+    # TODO: It may be necessary to create the pardir, not sure.
+    dest: /var/lib/prosody/{{ 'auth%2e'+jitsi_meet_server_name | replace('.', '%2e') }}/accounts/focus.dat
+  notify: restart prosody
+
+- name: Remove default localhost Jitsi Meet config file.
+  file:
+    path: /etc/jitsi/meet/localhost-config.js
+    state: absent
+  notify: restart jitsi-videobridge
+
+- name: Remove default localhost Prosody config file.
+  file:
+    path: /etc/prosody/conf.d/localhost.cfg.lua
+    state: absent
+  notify: restart prosody
 
 - name: Set debconf options for jitsi-meet.
   debconf:
@@ -94,6 +118,6 @@
       value: "{{ jitsi_meet_server_name }}"
       vtype: string
   notify:
-    - restart prosody
     - restart jitsi-videobridge
     - restart jifoco
+    - restart prosody
