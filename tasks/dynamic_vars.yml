@@ -1,0 +1,14 @@
+---
+- name: Read Jitsi Videobridge secret var.
+  command: >
+    perl -lanE '/^JVB_SECRET=(.*)$/ && print $1'
+    /etc/jitsi/videobridge/config
+  register: jitsi_meet_videobridge_secret_result
+  changed_when: false
+
+- name: Set fact for Jitsi Videobridge secret var.
+  set_fact:
+    jitsi_meet_videobridge_secret: "{{ jitsi_meet_videobridge_secret_result.stdout }}"
+  # Permit custom secrets in the template; only set the var if no custom secret is declared.
+  when: jitsi_meet_videobridge_secret is not defined or
+        jitsi_meet_videobridge_secret == ''
