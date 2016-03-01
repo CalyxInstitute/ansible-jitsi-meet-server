@@ -1,19 +1,40 @@
 ---
+- name: Copy default Nginx config for Jitsi Meet.
+  command: >
+    mv /etc/nginx/sites-available/localhost.conf
+       /etc/nginx/sites-available/{{ jitsi_meet_server_name }}.conf
+  args:
+    creates: "/etc/nginx/sites-available/{{ jitsi_meet_server_name }}.conf"
+  notify: restart nginx
+
 - name: Update the SSL cert and key
   lineinfile:
-    dest: "/etc/nginx/sites-enabled/{{ jitsi_meet_server_name }}.conf"
+    dest: "/etc/nginx/sites-available/{{ jitsi_meet_server_name }}.conf"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present
+    backrefs: yes
   with_items:
-    - regexp: "^    ssl_certificate "
-      line: "    ssl_certificate {{ jitsi_meet_ssl_cert_path }};"
-    - regexp: "^    ssl_certificate_key "
-      line: "    ssl_certificate_key {{ jitsi_meet_ssl_key_path }};"
+    - regexp: '^(\s*ssl_certificate )'
+      line: '\1{{ jitsi_meet_ssl_cert_path }};'
+    - regexp: '^(\s*ssl_certificate_key )'
+      line: '\1{{ jitsi_meet_ssl_key_path }};'
+    - regexp: '^(\s*alias /etc/jitsi/meet)'
+      line: '\1/{{ jitsi_meet_server_name }}-config.js;'
   notify: restart nginx
 
 - name: Deactivate the default nginx site
   file:
-    path: /etc/nginx/sites-enabled/default
+    path: /etc/nginx/sites-enabled/{{ item }}
     state: absent
+  with_items:
+    - default
+    - localhost.conf
+  notify: restart nginx
+
+- name: Activate the custom Jitsi Meet config.
+  file:
+    path: "/etc/nginx/sites-enabled/{{ jitsi_meet_server_name }}.conf"
+    src: "/etc/nginx/sites-available/{{ jitsi_meet_server_name }}.conf"
+    state: link
   notify: restart nginx
