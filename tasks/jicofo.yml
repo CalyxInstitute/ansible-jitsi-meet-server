@@ -9,17 +9,11 @@
   notify: restart jicofo
 
 - name: Set hostname in Videobridge config.
-  lineinfile:
+  template:
     dest: /etc/jitsi/videobridge/config
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
-  with_items:
-    - regexp: '^JVB_HOST='
-      line: "JVB_HOST="
-    - regexp: '^JVB_HOSTNAME='
-      line: "JVB_HOSTNAME={{ jitsi_meet_server_name }}"
-    - regexp: '^JVB_SECRET='
-      line: "JVB_SECRET={{ jitsi_meet_videobridge_secret }}"
+    src: videobridge_config.j2
+    owner: root
+    group: root
+    mode: "0644"
   notify: restart jitsi-videobridge
 
