@@ -1,8 +1,8 @@
 VirtualHost "{{ jitsi_meet_server_name }}"
     authentication = "{{ jitsi_meet_authentication }}"
     ssl = {
-        key = "/etc/prosody/certs/{{ jitsi_meet_server_name }}.key";
-        certificate = "/etc/prosody/certs/{{ jitsi_meet_server_name }}.crt";
+        key = "/var/lib/prosody/{{ jitsi_meet_server_name }}.key";
+        certificate = "/var/lib/prosody/{{ jitsi_meet_server_name }}.crt";
     }
 
     modules_enabled = {
@@ -18,7 +18,7 @@ Component "conference.{{ jitsi_meet_server_name }}" "muc"
      admins = { "focus@auth.{{ jitsi_meet_server_name }}" }
 
 Component "jitsi-videobridge.{{ jitsi_meet_server_name }}"
-     component_secret = "WiseWaitHowlToSabineChasmValetRheaLoin"
+     component_secret = "{{ jitsi_meet_videobridge_secret }}"
 
 Component "focus.{{ jitsi_meet_server_name }}"
-     component_secret = "HasteTaosHorusCalmJhNucleiDawnAmaKazoo"
+     component_secret = "{{ jitsi_meet_jicofo_secret }}"

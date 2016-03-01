@@ -29,12 +29,22 @@
     state: present
   with_items:
     - regexp: '^JICOFO_HOST='
-      line: "JICOFO_HOST={{ jitsi_meet_server_name }}"
+      line: "JICOFO_HOST=localhost"
     - regexp: '^JICOFO_HOSTNAME='
       line: "JICOFO_HOSTNAME={{ jitsi_meet_server_name }}"
     - regexp: '^JICOFO_AUTH_DOMAIN='
       line: "JICOFO_AUTH_DOMAIN=auth.{{ jitsi_meet_server_name }}"
+    - regexp: '^JICOFO_SECRET='
+      line: "JICOFO_SECRET={{ jitsi_meet_jicofo_secret }}"
+    - regexp: '^JICOFO_AUTH_PASSWORD='
+      line: "JICOFO_AUTH_PASSWORD={{ jitsi_meet_jicofo_password }}"
   notify: restart jicofo
+
+- name: Register Jicofo user with Prosody service.
+  command: >
+    prosodyctl register focus
+    auth.{{ jitsi_meet_server_name }} {{ jitsi_meet_jicofo_password }}
+  notify: restart prosody
 
 - name: Set hostname in Videobridge config.
   lineinfile:
@@ -44,11 +54,11 @@
     state: present
   with_items:
     - regexp: '^JVB_HOST='
-      line: "JVB_HOST={{ jitsi_meet_server_name }}"
+      line: "JVB_HOST="
     - regexp: '^JVB_HOSTNAME='
       line: "JVB_HOSTNAME={{ jitsi_meet_server_name }}"
-    - regexp: '^JICOFO_AUTH_DOMAIN='
-      line: "JICOFO_AUTH_DOMAIN=auth.{{ jitsi_meet_server_name }}"
+    - regexp: '^JVB_SECRET='
+      line: "JVB_SECRET={{ jitsi_meet_videobridge_secret }}"
   notify: restart jitsi-videobridge
 
 - name: Symlink Prosody config by domain name.
@@ -63,3 +73,4 @@
     path: "/etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js"
     state: link
     src: /etc/jitsi/meet/localhost-config.js
+

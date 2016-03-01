@@ -6,3 +6,10 @@ jitsi_meet_ssl_cert_path: /etc/ssl/fpf_combined.pem
 jitsi_meet_ssl_key_path: /etc/ssl/freedom.key
 
 jitsi_meet_authentication: anonymous
+
+
+# Hard-coding secrets during development.
+jitsi_meet_videobridge_secret: WiseWaitHowlToSabineChasmValetRheaLoin
+jitsi_meet_jicofo_secret: HasteTaosHorusCalmJhNucleiDawnAmaKazoo
+jitsi_meet_jicofo_password: TermZoFrenzyGyBrantVixenXenonXbWax
+
