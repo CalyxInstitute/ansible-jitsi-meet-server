@@ -1,0 +1,30 @@
+---
+- name: Copy default Jitsi meet config file.
+  command: >
+    cp /etc/jitsi/meet/localhost-config.js
+       /etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js
+  args:
+    creates: "/etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js"
+  notify: restart jitsi-videobridge
+
+- name: Set the Jitsi Meet hostname
+  replace:
+    dest: "/etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js"
+    regexp: "^(.*)localhost(.*)"
+    replace: "\\1{{ jitsi_meet_server_name }}\\2"
+  notify: restart jitsi-videobridge
+
+- name: Disable third party resources in Jitsi Meet config.
+  lineinfile:
+    dest: "/etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js"
+    regexp: "^    disableThirdPartyRequests"
+    line: "    disableThirdPartyRequests: true,"
+    state: present
+  notify: restart jitsi-videobridge
+
+- name: Remove default localhost Jitsi Meet config file.
+  file:
+    path: /etc/jitsi/meet/localhost-config.js
+    state: absent
+  notify: restart jitsi-videobridge
+

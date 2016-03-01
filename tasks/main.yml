@@ -3,6 +3,8 @@
 
 - include: prosody.yml
 
+- include: jitsi_meet.yml
+
 - include: configure.yml
 
 - include: nginx.yml
