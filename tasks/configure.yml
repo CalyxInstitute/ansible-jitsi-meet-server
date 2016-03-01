@@ -74,3 +74,26 @@
     state: link
     src: /etc/jitsi/meet/localhost-config.js
 
+- name: Set debconf options for jitsi-meet.
+  debconf:
+    name: "{{ item.name }}"
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  with_items:
+    - name: jitsi-meet
+      question: jitsi-meet/jvb-hostname
+      value: "{{ jitsi_meet_server_name }}"
+      vtype: string
+    - name: jitsi-meet
+      question: jitsi-meet/jvb-serve
+      value: "false"
+      vtype: boolean
+    - name: jitsi-meet-prosody
+      question: jitsi-meet-prosody/jvb-hostname
+      value: "{{ jitsi_meet_server_name }}"
+      vtype: string
+  notify:
+    - restart prosody
+    - restart jitsi-videobridge
+    - restart jifoco
