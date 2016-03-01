@@ -11,7 +11,7 @@ jitsi_meet_authentication: anonymous
 # The Debian package installation of jitsi-meet will generate secrets for the components.
 # The role will read the config file and preserve the secrets even while templating.
 jitsi_meet_videobridge_secret: ''
-jitsi_meet_jicofo_secret: HasteTaosHorusCalmJhNucleiDawnAmaKazoo
+jitsi_meet_jicofo_secret: ''
 jitsi_meet_jicofo_password: TermZoFrenzyGyBrantVixenXenonXbWax
 
 
