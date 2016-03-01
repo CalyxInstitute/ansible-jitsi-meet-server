@@ -12,7 +12,7 @@ jitsi_meet_authentication: anonymous
 # The role will read the config file and preserve the secrets even while templating.
 jitsi_meet_videobridge_secret: ''
 jitsi_meet_jicofo_secret: ''
-jitsi_meet_jicofo_password: TermZoFrenzyGyBrantVixenXenonXbWax
+jitsi_meet_jicofo_password: ''
 
 
 jitsi_meet_jicofo_user: focus
