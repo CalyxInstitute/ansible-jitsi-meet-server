@@ -75,16 +75,34 @@ jitsi_meet_configure_firewall: true
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+It's technically not a dependency, but you should check out [thefinn93.letsencrypt]
+for astoundingly easy SSL certs.
 
 Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- name: Configure jitsi-meet server.
+  hosts: jitsi
+  vars:
+    # Change this to match the DNS entry for your host IP.
+    jitsi_meet_server_name: meet.example.com
+  roles:
+    - role: thefinn93.letsencrypt
+      become: yes
+      letsencrypt_email: "webmaster@{{ jitsi_meet_server_name }}"
+      letsencrypt_cert_domains:
+        - "{{ jitsi_meet_server_name }}"
+      tags: letsencrypt
+
+    - role: ansible-role-jitsi-meet
+      jitsi_meet_ssl_cert_path: "/etc/letsencrypt/live/{{ jitsi_meet_server_name }}/fullchain.pem"
+      jitsi_meet_ssl_key_path: "/etc/letsencrypt/live/{{ jitsi_meet_server_name }}/privkey.pem"
+      become: yes
+      tags: jitsi
+```
 
 License
 -------
