@@ -104,6 +104,26 @@ Including an example of how to use your role (for instance, with variables passe
       tags: jitsi
 ```
 
+Running the tests
+-----------------
+
+This role uses [Molecule] and [ServerSpec] for testing. To use it:
+
+```
+pip install molecule
+gem install serverspec
+molecule test
+```
+
+You can also run selective commands:
+
+```
+molecule idempotence
+molecule verify
+```
+
+See the [Molecule] docs for more info.
+
 License
 -------
 
@@ -118,3 +138,5 @@ Author Information
 [thefinn93.letsencrypt]: https://github.com/thefinn93/ansible-letsencrypt
 [LetsEncrypt]: https://letsencrypt.org/
 [Freedom of the Press Foundation]: https://freedom.press/
+[Molecule]: http://molecule.readthedocs.org/en/master/
+[ServerSpec]: http://serverspec.org/
