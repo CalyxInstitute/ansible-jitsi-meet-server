@@ -1,14 +1,14 @@
 jitsi-meet
 =========
 
-Installs and configures the Jitsi Meet videoconferencing software.
+Installs and configures the [Jitsi Meet] videoconferencing software.
 
 
 Requirements
 ------------
 
 You should have DNS pointed at the server already, and SSL keys. If you don't have SSL
-keys for the domain yet, consider using the excellent [finn93.letsencrypt] Ansible role
+keys for the domain yet, consider using the excellent [thefinn93.letsencrypt] Ansible role
 to obtain (free!) SSL certs from [LetsEncrypt].
 
 Role Variables
@@ -112,9 +112,9 @@ MIT
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+[Freedom of the Press Foundation]
 
-
-[Jitsi Meet](https://github.com/jitsi/jitsi-meet)
-[thefinn93.letsencrypt](https://github.com/thefinn93/ansible-letsencrypt)
-[LetsEncrypt](https://letsencrypt.org/)
+[Jitsi Meet]: https://github.com/jitsi/jitsi-meet
+[thefinn93.letsencrypt]: https://github.com/thefinn93/ansible-letsencrypt
+[LetsEncrypt]: https://letsencrypt.org/
+[Freedom of the Press Foundation]: https://freedom.press/

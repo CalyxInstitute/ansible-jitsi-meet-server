@@ -1,8 +1,10 @@
 ---
 galaxy_info:
-  author: Kevin Gallagher (@ageis)
-  description: Installs Jitsi Meet
-  company: Freedom of the Press Foundation (@FreedomofPress)
+  author:
+    - Kevin Gallagher (@ageis)
+    - Conor Schaefer (@conorsch)
+  description: Installs Jitsi Meet videoconferencing software
+  company: Freedom of the Press Foundation (@freedomofpress)
   license: MIT
   min_ansible_version: 1.9.4
   platforms:
