@@ -1,0 +1,3 @@
+---
+- src: https://github.com/thefinn93/ansible-letsencrypt
+  name: thefinn93.letsencrypt
