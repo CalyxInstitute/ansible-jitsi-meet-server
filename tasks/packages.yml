@@ -14,10 +14,6 @@
     repo: 'deb http://download.jitsi.org/nightly/deb unstable/'
     state: present
 
-- name: Disable MEMPROTECT on Java
-  command: paxctl -cm /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
-  ignore_errors: yes
-
 - name: Install Jitsi Meet
   apt:
     name: jitsi-meet
