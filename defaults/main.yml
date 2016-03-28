@@ -35,6 +35,14 @@ jitsi_meet_videobridge_port: 5347
 # https://github.com/jitsi/jitsi-meet/pull/427
 jitsi_meet_disable_third_party_requests: true
 
+
+# Screensharing config for Firefox. Set max_version to '42' and disabled to 'false'
+# if you want to use screensharing under Firefox. Separate options are required
+# for Chrome.
+jitsi_meet_desktop_sharing_firefox_ext_id: 'null'
+jitsi_meet_desktop_sharing_firefox_disabled: true
+jitsi_meet_desktop_sharing_firefox_max_version_ext_required: '-1'
+
 # These debconf settings represent answers to interactive prompts during installation
 # of the jitsi-meet deb package. If you use custom SSL certs, you may have to set more options.
 jitsi_meet_debconf_settings:
