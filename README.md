@@ -96,6 +96,12 @@ You'll need to build your own browser extension for Chrome and/or Firefox.
 See the [Jidesha] documentation for detailed build instructions. This role
 has only been tested with custom Chrome extensions.
 
+Chrome forbids installation of extensions from unapproved websites, so you must
+download the `.crx` file directly, then navigate to `chrome://extensions` and
+drag-and-drop the extension to install it. If you want to grant another
+participant screen-sharing support, share the URL for the extension with them
+via the Jitsi Meet text chat pane.
+
 Dependencies
 ------------
 
