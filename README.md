@@ -87,6 +87,15 @@ jitsi_meet_debconf_settings:
 jitsi_meet_configure_firewall: true
 ```
 
+Screen sharing
+--------------
+Jitsi Meet supports screen sharing functionality via browser extensions.
+Only the party sharing the screen needs the extension installed—other participants
+in the meeting will be able to view the shared screen without installing anything.
+You'll need to build your own browser extension for Chrome and/or Firefox.
+See the [Jidesha] documentation for detailed build instructions. This role
+has only been tested with custom Chrome extensions.
+
 Dependencies
 ------------
 
@@ -155,3 +164,4 @@ Author Information
 [Freedom of the Press Foundation]: https://freedom.press/
 [Molecule]: http://molecule.readthedocs.org/en/master/
 [ServerSpec]: http://serverspec.org/
+[Jidesha]: https://github.com/jitsi/jidesha
