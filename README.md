@@ -51,6 +51,21 @@ jitsi_meet_videobridge_port: 5347
 # https://github.com/jitsi/jitsi-meet/pull/427
 jitsi_meet_disable_third_party_requests: true
 
+# Screensharing config for Chrome. You'll need to build and package a browser
+# extension specifically for your domain; see https://github.com/jitsi/jidesha
+jitsi_meet_desktop_sharing_chrome_method: 'ext'
+jitsi_meet_desktop_sharing_chrome_ext_id: 'diibjkoicjeejcmhdnailmkgecihlobk'
+
+# Path to local extension on disk, for copying to target host. The remote filename
+# will be the basename of the path provided here.
+jitsi_meet_desktop_sharing_chrome_extension_filename: ''
+
+# Screensharing config for Firefox. Set max_version to '42' and disabled to 'false'
+# if you want to use screensharing under Firefox.
+jitsi_meet_desktop_sharing_firefox_ext_id: 'null'
+jitsi_meet_desktop_sharing_firefox_disabled: true
+jitsi_meet_desktop_sharing_firefox_max_version_ext_required: '-1'
+
 # These debconf settings represent answers to interactive prompts during installation
 # of the jitsi-meet deb package. If you use custom SSL certs, you may have to set more options.
 jitsi_meet_debconf_settings:
@@ -71,6 +86,21 @@ jitsi_meet_debconf_settings:
 # If you're managing a firewall elsewise, set this to false, and ufw will be skipped.
 jitsi_meet_configure_firewall: true
 ```
+
+Screen sharing
+--------------
+Jitsi Meet supports screen sharing functionality via browser extensions.
+Only the party sharing the screen needs the extension installed—other participants
+in the meeting will be able to view the shared screen without installing anything.
+You'll need to build your own browser extension for Chrome and/or Firefox.
+See the [Jidesha] documentation for detailed build instructions. This role
+has only been tested with custom Chrome extensions.
+
+Chrome forbids installation of extensions from unapproved websites, so you must
+download the `.crx` file directly, then navigate to `chrome://extensions` and
+drag-and-drop the extension to install it. If you want to grant another
+participant screen-sharing support, share the URL for the extension with them
+via the Jitsi Meet text chat pane.
 
 Dependencies
 ------------
@@ -140,3 +170,4 @@ Author Information
 [Freedom of the Press Foundation]: https://freedom.press/
 [Molecule]: http://molecule.readthedocs.org/en/master/
 [ServerSpec]: http://serverspec.org/
+[Jidesha]: https://github.com/jitsi/jidesha

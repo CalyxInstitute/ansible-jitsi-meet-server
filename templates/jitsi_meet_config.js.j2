@@ -21,9 +21,9 @@ var config = {
     //defaultSipNumber: '', // Default SIP number
 
     // Desktop sharing method. Can be set to 'ext', 'webrtc' or false to disable.
-    desktopSharingChromeMethod: 'ext',
+    desktopSharingChromeMethod: '{{ jitsi_meet_desktop_sharing_chrome_method }}',
     // The ID of the jidesha extension for Chrome.
-    desktopSharingChromeExtId: 'diibjkoicjeejcmhdnailmkgecihlobk',
+    desktopSharingChromeExtId: '{{ jitsi_meet_desktop_sharing_chrome_ext_id }}',
     // The media sources to use when using screen sharing with the Chrome
     // extension.
     desktopSharingChromeSources: ['screen', 'window'],
@@ -32,15 +32,15 @@ var config = {
 
     // The ID of the jidesha extension for Firefox. If null, we assume that no
     // extension is required.
-    desktopSharingFirefoxExtId: null,
+    desktopSharingFirefoxExtId: {{ jitsi_meet_desktop_sharing_firefox_ext_id }},
     // Whether desktop sharing should be disabled on Firefox.
-    desktopSharingFirefoxDisabled: true,
+    desktopSharingFirefoxDisabled: {{ 'true' if jitsi_meet_desktop_sharing_firefox_disabled else 'false' }},
     // The maximum version of Firefox which requires a jidesha extension.
     // Example: if set to 41, we will require the extension for Firefox versions
     // up to and including 41. On Firefox 42 and higher, we will run without the
     // extension.
     // If set to -1, an extension will be required for all versions of Firefox.
-    desktopSharingFirefoxMaxVersionExtRequired: -1,
+    desktopSharingFirefoxMaxVersionExtRequired: {{ jitsi_meet_desktop_sharing_firefox_max_version_ext_required }},
     // The URL to the Firefox extension for desktop sharing.
     desktopSharingFirefoxExtensionURL: null,
 
