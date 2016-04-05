@@ -7,3 +7,11 @@
     group: root
     mode: "0644"
   notify: restart jitsi-videobridge
+
+- name: Set jitsi-videobridge log level.
+  lineinfile:
+    dest: /etc/jitsi/videobridge/logging.properties
+    regexp: "^.level"
+    line: ".level={{ jitsi_meet_videobridge_loglevel }}"
+    state: present
+  notify: restart jitsi-videobridge
