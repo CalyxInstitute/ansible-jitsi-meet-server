@@ -20,7 +20,7 @@
 - name: Set Jicofo log level.
   lineinfile:
     dest: /etc/jitsi/jicofo/logging.properties
-    regexp: "^.level"
+    regexp: "^\.level"
     line: ".level={{ jitsi_meet_jicofo_loglevel }}"
     state: present
   notify: restart jicofo

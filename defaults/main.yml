@@ -25,6 +25,9 @@ jitsi_meet_jicofo_password: ''
 jitsi_meet_jicofo_user: focus
 jitsi_meet_jicofo_port: 5347
 
+# The Jitsi components use the standard Java log levels, see:
+# https://docs.oracle.com/javase/7/docs/api/java/util/logging/Level.html
+# When using log aggregation for jitsi-meet components, set to "WARNING".
 jitsi_meet_jicofo_loglevel: INFO
 # The default config file at /etc/jitsi/videobridge/config claims the default port
 # for JVB is "5275", but the manual install guide references "5347".
