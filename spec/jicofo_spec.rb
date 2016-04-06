@@ -12,6 +12,14 @@ describe file('/etc/jitsi/jicofo/config') do
   its('content') { should match(/^JICOFO_AUTH_USER=focus$/) }
 end
 
+describe file('/etc/jitsi/jicofo/logging.properties') do
+  it { should be_file }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+  its('mode') { should eq '644' }
+  its('content') { should match(/^\.level=INFO$/) }
+end
+
 describe service('jicofo') do
   it { should be_enabled }
   it { should be_running }
