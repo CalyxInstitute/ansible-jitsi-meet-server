@@ -13,6 +13,8 @@ describe file('/etc/jitsi/videobridge/config') do
   its('content') { should match(/^JVB_HOSTNAME=localhost$/) }
   its('content') { should match(/^JVB_HOST=$/) }
   its('content') { should match(/^JVB_PORT=#{jvb_service_port}$/) }
+  # It may be necessary to expand the regex for matching secrets.
+  # See the jicofo tests for comparison.
   its('content') { should match(/^JVB_SECRET=\w{8,}$/) }
 end
 

@@ -7,7 +7,9 @@ describe file('/etc/jitsi/jicofo/config') do
   its('mode') { should eq '644' }
   its('content') { should match(/^JICOFO_HOST=localhost$/) }
   its('content') { should match(/^JICOFO_PORT=5347$/) }
-  its('content') { should match(/^JICOFO_SECRET=\w{8,}$/) }
+  # The regex for the "secret" may be off. Tests have failed before
+  # when matching only '\w', due to a '@', so adding that.
+  its('content') { should match(/^JICOFO_SECRET=[\w@]{8,}$/) }
   its('content') { should match(/^JICOFO_AUTH_PASSWORD=\w{8,}$/) }
   its('content') { should match(/^JICOFO_AUTH_USER=focus$/) }
 end
