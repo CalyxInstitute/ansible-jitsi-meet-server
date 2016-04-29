@@ -26,9 +26,12 @@
   # duplicating the config line.
 - name: Remove default localhost Nginx config file.
   file:
-    path: /etc/nginx/sites-available/localhost.conf
+    path: "{{ item }}"
     state: absent
   notify: restart nginx
+  with_items:
+    - /etc/nginx/sites-available/localhost.conf
+    - /etc/nginx/sites-enabled/localhost.conf
   # Only remove the "localhost" file if we're using custom SSL keys, i.e. in prod.
   when: jitsi_meet_ssl_cert_path != '' and
         jitsi_meet_ssl_key_path != ''
