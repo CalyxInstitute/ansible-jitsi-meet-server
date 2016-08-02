@@ -11,6 +11,12 @@ You should have DNS pointed at the server already, and SSL keys. If you don't ha
 keys for the domain yet, consider using the excellent [thefinn93.letsencrypt] Ansible role
 to obtain (free!) SSL certs from [LetsEncrypt].
 
+You will also need to expose ports 443 TCP and 10000 UDP for the Jitsi Meet
+components to work. By default the role will use `ufw` to allow these ports. If you
+use another host-based firewall solution such as iptables, set
+`jitsi_meet_configure_firewall: false`. If you use AWS or similar, you'll need to
+expose those ports in the associated Security Group.
+
 Role Variables
 --------------
 
