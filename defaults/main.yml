@@ -13,6 +13,9 @@ jitsi_meet_server_name: "{{ ansible_fqdn if jitsi_meet_ssl_cert_path else 'local
 # Only "anonymous" auth is supported, which lets anyone use the videoconference server.
 jitsi_meet_authentication: anonymous
 
+# Whether to use nightly builds of the Jitsi Meet components.
+jitsi_meet_use_nightly_apt_repo: false
+
 # The Debian package installation of jitsi-meet will generate secrets for the components.
 # The role will read the config file and preserve the secrets even while templating.
 # If you wish to generate your own secrets and use those, override these vars, but make

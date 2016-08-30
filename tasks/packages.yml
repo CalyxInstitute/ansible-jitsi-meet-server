@@ -9,10 +9,15 @@
     keyserver: keys.gnupg.net
     id: C697D823EB0AB654
 
-- name: Install Jitsi apt repo
+- name: Install Jitsi apt repo (stable)
+  apt_repository:
+    repo: 'deb http://download.jitsi.org/ stable/'
+    state: "{{ 'absent' if jitsi_meet_use_nightly_apt_repo else 'present' }}"
+
+- name: Install Jitsi apt repo (unstable)
   apt_repository:
     repo: 'deb http://download.jitsi.org/nightly/deb unstable/'
-    state: present
+    state: "{{ 'present' if jitsi_meet_use_nightly_apt_repo else 'absent' }}"
 
 - name: Install Jitsi Meet
   apt:
