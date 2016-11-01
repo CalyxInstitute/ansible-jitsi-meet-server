@@ -5,6 +5,10 @@
 jitsi_meet_ssl_cert_path: ''
 jitsi_meet_ssl_key_path: ''
 
+jitsi_meet_base_packages:
+  - apt-transport-https
+  - default-jre-headless
+
 # Without SSL, "localhost" is the correct default. If SSL info is provided,
 # then we'll need a real domain name. Using Ansible's inferred FQDN, but you
 # can set the variable value explicitly if you use a shorter hostname
@@ -15,8 +19,8 @@ jitsi_meet_authentication: anonymous
 
 # Whether to use nightly builds of the Jitsi Meet components.
 jitsi_meet_use_nightly_apt_repo: false
-jitsi_meet_apt_repo_stable: 'deb http://download.jitsi.org/ stable/'
-jitsi_meet_apt_repo_unstable: 'deb http://download.jitsi.org/nightly/deb unstable/'
+jitsi_meet_apt_repo_stable: 'deb https://download.jitsi.org/ stable/'
+jitsi_meet_apt_repo_unstable: 'deb https://download.jitsi.org/nightly/deb unstable/'
 # Wrapper for dynamically determining apt repo based on boolean for stable/unstable.
 jitsi_meet_apt_repo: "{{ jitsi_meet_apt_repo_unstable if jitsi_meet_use_nightly_apt_repo else jitsi_meet_apt_repo_stable }}"
 

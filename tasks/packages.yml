@@ -1,8 +1,9 @@
 ---
-- name: Install Java JRE
+- name: Install base apt packages.
   apt:
-    name: default-jre-headless
+    name: "{{ item }}"
     state: present
+  with_items: "{{ jitsi_meet_base_packages }}"
 
 - name: Add signing key for Jitsi repository
   apt_key:
