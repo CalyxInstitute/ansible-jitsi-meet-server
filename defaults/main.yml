@@ -15,6 +15,10 @@ jitsi_meet_authentication: anonymous
 
 # Whether to use nightly builds of the Jitsi Meet components.
 jitsi_meet_use_nightly_apt_repo: false
+jitsi_meet_apt_repo_stable: 'deb http://download.jitsi.org/ stable/'
+jitsi_meet_apt_repo_unstable: 'deb http://download.jitsi.org/nightly/deb unstable/'
+# Wrapper for dynamically determining apt repo based on boolean for stable/unstable.
+jitsi_meet_apt_repo: "{{ jitsi_meet_apt_repo_unstable if jitsi_meet_use_nightly_apt_repo else jitsi_meet_apt_repo_stable }}"
 
 # The Debian package installation of jitsi-meet will generate secrets for the components.
 # The role will read the config file and preserve the secrets even while templating.

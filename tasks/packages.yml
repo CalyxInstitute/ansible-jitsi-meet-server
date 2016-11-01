@@ -9,15 +9,20 @@
     keyserver: keys.gnupg.net
     id: C697D823EB0AB654
 
-- name: Install Jitsi apt repo (stable)
-  apt_repository:
-    repo: 'deb http://download.jitsi.org/ stable/'
-    state: "{{ 'absent' if jitsi_meet_use_nightly_apt_repo else 'present' }}"
+# Prior versions of the role were writing to this file, let's
+# clean it up and use a generalized filename for configuring the apt repo,
+# regardless of whether stable or unstable is used.
+- name: Remove deprecated repo filename.
+  file:
+    path: /etc/apt/sources.list.d/download_jitsi_org_nightly_deb.list
+    state: absent
 
-- name: Install Jitsi apt repo (unstable)
+- name: Install Jitsi apt repo.
   apt_repository:
-    repo: 'deb http://download.jitsi.org/nightly/deb unstable/'
-    state: "{{ 'present' if jitsi_meet_use_nightly_apt_repo else 'absent' }}"
+    repo: "{{ jitsi_meet_apt_repo }}"
+    state: present
+    # Ansible will automatically add the ".list" suffix.
+    filename: /etc/apt/sources.list.d/jitsi_meet
 
 - name: Install Jitsi Meet
   apt:
