@@ -2,6 +2,9 @@
 ansible:
   playbook: examples/test.yml
 
+molecule:
+  serverspec_dir: spec/
+
 vagrant:
   platforms:
     - name: jessie64
@@ -15,11 +18,15 @@ vagrant:
       type: virtualbox
 
   instances:
-    - name: jitsi-meet
-      interfaces:
-        - network_name: private_network
-          type: dhcp
-          auto_config: true
+    - name: jitsi-meet-stable
       options:
         raw_config_args:
           - "vm.network 'forwarded_port', guest: 443, host: 4443"
+          - "vm.synced_folder './', '/vagrant', disabled: true"
+
+    - name: jitsi-meet-unstable
+      options:
+        raw_config_args:
+          - "vm.network 'forwarded_port', guest: 443, host: 4444"
+          - "vm.synced_folder './', '/vagrant', disabled: true"
+
