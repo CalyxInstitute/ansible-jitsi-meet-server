@@ -3,6 +3,8 @@
   apt:
     name: "{{ item }}"
     state: present
+    update_cache: yes
+    cache_valid_time: 3600
   with_items: "{{ jitsi_meet_base_packages }}"
 
 # Prior versions of the role were writing to this file, let's
