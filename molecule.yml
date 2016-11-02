@@ -1,9 +1,13 @@
 ---
 ansible:
   playbook: examples/test.yml
+  verbose: vv
 
 molecule:
   serverspec_dir: spec/
+
+verifier:
+    name: serverspec
 
 vagrant:
   platforms:
@@ -19,14 +23,11 @@ vagrant:
 
   instances:
     - name: jitsi-meet-stable
-      options:
-        raw_config_args:
-          - "vm.network 'forwarded_port', guest: 443, host: 4443"
-          - "vm.synced_folder './', '/vagrant', disabled: true"
+      raw_config_args:
+        - "vm.network 'forwarded_port', guest: 443, host: 4443"
+        - "vm.synced_folder './', '/vagrant', disabled: true"
 
     - name: jitsi-meet-unstable
-      options:
-        raw_config_args:
-          - "vm.network 'forwarded_port', guest: 443, host: 4444"
-          - "vm.synced_folder './', '/vagrant', disabled: true"
-
+      raw_config_args:
+        - "vm.network 'forwarded_port', guest: 443, host: 4444"
+        - "vm.synced_folder './', '/vagrant', disabled: true"
