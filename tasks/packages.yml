@@ -5,10 +5,22 @@
     state: present
   with_items: "{{ jitsi_meet_base_packages }}"
 
-- name: Add signing key for Jitsi repository
+- name: Add signing key for Jitsi repository.
   apt_key:
     keyserver: keys.gnupg.net
-    id: C697D823EB0AB654
+    id: "{{ item.id }}"
+    url: "{{ item.url }}"
+    state: "{{ item.state }}"
+  with_items:
+    - id: 66A9CD0595D6AFA247290D3BEF8B479E2DC1389C
+      state: present
+      url: "https://download.jitsi.org/jitsi-key.gpg.key"
+
+    # Prior versions of the role installed a Debian SIP Communicator
+    # apt GPG key, which is no longer correct.
+    - id: 040F57608F84BAF1BF844A62C697D823EB0AB654
+      state: absent
+      url: None
 
 # Prior versions of the role were writing to this file, let's
 # clean it up and use a generalized filename for configuring the apt repo,
