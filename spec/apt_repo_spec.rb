@@ -35,6 +35,11 @@ pub   1024D/EB0AB654 2008-06-20
 uid                  SIP Communicator (Debian package) <deb-pkg@sip-communicator.org>
 sub   2048g/F6EFCE13 2008-06-20
 APT_KEY_UNWANTED
-  its('stdout') { should include(jitsi_apt_key) }
-  its('stdout') { should_not include(jitsi_apt_key_incorrect) }
+  if ENV['TARGET_HOST'].end_with?('unstable')
+    its('stdout') { should_not include(jitsi_apt_key) }
+    its('stdout') { should include(jitsi_apt_key_incorrect) }
+  else
+    its('stdout') { should include(jitsi_apt_key) }
+    its('stdout') { should_not include(jitsi_apt_key_incorrect) }
+  end
 end
