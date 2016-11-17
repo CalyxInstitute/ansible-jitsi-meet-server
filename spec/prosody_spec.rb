@@ -56,7 +56,7 @@ describe file('/etc/prosody/conf.avail/localhost.cfg.lua') do
     it { should be_owned_by 'prosody' }
     it { should be_grouped_into 'prosody' }
     its('mode') { should eq '640' }
-    regexp = /^\s+\["password"\] = "\w+";$/
+    regexp = /^\s+\["password"\] = "[\w@#]+";$/
     its('content') { should match(regexp) }
   end
 end
