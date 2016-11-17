@@ -5,12 +5,23 @@ describe package('apt-transport-https') do
 end
 
 describe command('apt-cache policy') do
-  jitsi_apt_repo = <<APT_REPO
+  jitsi_apt_repo_stable = <<APT_REPO_STABLE
  500 https://download.jitsi.org/ stable/ Packages
      release o=jitsi.org,a=stable,n=stable,l=Jitsi Debian packages repository,c=
      origin download.jitsi.org
-APT_REPO
-  its('stdout') { should include(jitsi_apt_repo) }
+APT_REPO_STABLE
+  jitsi_apt_repo_unstable = <<APT_REPO_UNSTABLE
+ 500 https://download.jitsi.org/ unstable/ Packages
+     release o=jitsi.org,a=unstable,n=unstable,l=Jitsi Debian packages repository,c=
+     origin download.jitsi.org
+APT_REPO_UNSTABLE
+  if ENV['TARGET_HOST'].end_with?('unstable')
+    its('stdout') { should include(jitsi_apt_repo_unstable) }
+    its('stdout') { should_not include(jitsi_apt_repo_stable) }
+  else
+    its('stdout') { should include(jitsi_apt_repo_stable) }
+    its('stdout') { should_not include(jitsi_apt_repo_unstable) }
+  end
 end
 
 describe file('/etc/apt/sources.list.d/jitsi_meet.list') do
@@ -35,11 +46,6 @@ pub   1024D/EB0AB654 2008-06-20
 uid                  SIP Communicator (Debian package) <deb-pkg@sip-communicator.org>
 sub   2048g/F6EFCE13 2008-06-20
 APT_KEY_UNWANTED
-  if ENV['TARGET_HOST'].end_with?('unstable')
-    its('stdout') { should_not include(jitsi_apt_key) }
-    its('stdout') { should include(jitsi_apt_key_incorrect) }
-  else
-    its('stdout') { should include(jitsi_apt_key) }
-    its('stdout') { should_not include(jitsi_apt_key_incorrect) }
-  end
+  its('stdout') { should include(jitsi_apt_key) }
+  its('stdout') { should_not include(jitsi_apt_key_incorrect) }
 end
