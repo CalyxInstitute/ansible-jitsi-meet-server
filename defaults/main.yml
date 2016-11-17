@@ -22,14 +22,9 @@ jitsi_meet_use_nightly_apt_repo: false
 
 jitsi_meet_apt_repos:
   stable:
-    key_id: 66A9CD0595D6AFA247290D3BEF8B479E2DC1389C
-    key_url: "https://download.jitsi.org/jitsi-key.gpg.key"
     repo_url: 'deb https://download.jitsi.org/ stable/'
-
   unstable:
-    key_id: 040F57608F84BAF1BF844A62C697D823EB0AB654
-    key_url: None
-    repo_url: 'deb https://download.jitsi.org/nightly/deb unstable/'
+    repo_url: 'deb https://download.jitsi.org unstable/'
 
 # The Debian package installation of jitsi-meet will generate secrets for the components.
 # The role will read the config file and preserve the secrets even while templating.
