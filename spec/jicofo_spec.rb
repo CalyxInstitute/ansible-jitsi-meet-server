@@ -9,8 +9,10 @@ describe file('/etc/jitsi/jicofo/config') do
   its('content') { should match(/^JICOFO_PORT=5347$/) }
   # The regex for the "secret" may be off. Tests have failed before
   # when matching only '\w', due to a '@', so adding that.
-  its('content') { should match(/^JICOFO_SECRET=[\w@]{8,}$/) }
-  its('content') { should match(/^JICOFO_AUTH_PASSWORD=\w{8,}$/) }
+  # Also have seen '#', so adding that. Would love a definitive
+  # take on which characters are allowed here.
+  its('content') { should match(/^JICOFO_SECRET=[\w@#]{8,}$/) }
+  its('content') { should match(/^JICOFO_AUTH_PASSWORD=[\w@#]{8,}$/) }
   its('content') { should match(/^JICOFO_AUTH_USER=focus$/) }
 end
 

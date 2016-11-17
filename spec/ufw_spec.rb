@@ -4,7 +4,6 @@ ufw_expected_rules = [
   %r{ 22/tcp + ALLOW IN +Anywhere},
   %r{ 80/tcp + ALLOW IN +Anywhere},
   %r{ 443/tcp + ALLOW IN +Anywhere},
-  %r{ 4443/tcp + ALLOW IN +Anywhere},
   %r{ 10000/udp + ALLOW IN +Anywhere}
 ]
 
