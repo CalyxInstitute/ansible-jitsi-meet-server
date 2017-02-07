@@ -12,6 +12,7 @@
 - include: jicofo.yml
 
 - include: nginx.yml
+  when: jitsi_meet_configure_nginx
 
 - include: clean_up_default_configs.yml
   when: jitsi_meet_ssl_cert_path != '' and
