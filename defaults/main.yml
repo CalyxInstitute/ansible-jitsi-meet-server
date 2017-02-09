@@ -87,3 +87,7 @@ jitsi_meet_debconf_settings:
 # Role will automatically install configure ufw with jitsi-meet port holes.
 # If you're managing a firewall elsewise, set this to false, and ufw will be skipped.
 jitsi_meet_configure_firewall: true
+
+# Role will automatically install nginx and configure a vhost for use with jitsi-meet.
+# If you prefer to manage web vhosts via a separate role, set this to false.
+jitsi_meet_configure_nginx: true
