@@ -23,7 +23,6 @@
     # the jitsi-meet postinst scripts, so these values must match.
     path: /usr/share/jitsi-videobridge/.sip-communicator
     owner: jvb
-    group: jvb
   notify: restart jitsi-videobridge
 
 - name: Write SIP communicator settings.
@@ -31,5 +30,4 @@
     dest: /usr/share/jitsi-videobridge/.sip-communicator/sip-communicator.properties
     content: "org.jitsi.impl.neomedia.transform.srtp.SRTPCryptoContext.checkReplay=false"
     owner: jvb
-    group: jvb
   notify: restart jitsi-videobridge
