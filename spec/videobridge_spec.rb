@@ -1,8 +1,6 @@
 require 'spec_helper'
 
-# This is actually the port for the "jicofo" service; the jitsi-meet manual
-# install docs aren't explicit about default ports. FWIW, the config file
-# for jvb says that the default port is "5275", but I suspect that's old info.
+# This is the port which jvb will use to connect to prosody
 jvb_service_port = 5347
 
 describe file('/etc/jitsi/videobridge/config') do
@@ -31,18 +29,7 @@ describe service('jitsi-videobridge') do
   it { should be_running }
 end
 
-describe port(jvb_service_port) do
-  it { should be_listening }
-  it { should be_listening.on('127.0.0.1') }
-  it { should_not be_listening.on('0.0.0.0') }
-end
-
 # Check that jitsi-videobridge process is running as jvb user
 describe command('pgrep -u jvb | wc -l') do
   its('stdout') { should eq "1\n" }
-end
-
-describe command('sudo netstat -nlt') do
-  its('stdout') { should match(/127\.0\.0\.1:#{jvb_service_port}/) }
-  its('stdout') { should_not match(/0\.0\.0\.0:#{jvb_service_port}/) }
 end
