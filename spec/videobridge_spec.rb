@@ -37,8 +37,8 @@ describe port(jvb_service_port) do
   it { should_not be_listening.on('0.0.0.0') }
 end
 
-# Check that jicofo process is running as jicofo user
-describe command('pgrep -u jicofo | wc -l') do
+# Check that jitsi-videobridge process is running as jvb user
+describe command('pgrep -u jvb | wc -l') do
   its('stdout') { should eq "1\n" }
 end
 
