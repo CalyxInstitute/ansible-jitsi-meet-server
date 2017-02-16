@@ -60,3 +60,16 @@ describe file('/etc/prosody/conf.avail/localhost.cfg.lua') do
     its('content') { should match(regexp) }
   end
 end
+
+# 5347 is the XMPP component port.
+# Prosody listens on it, jicofo and jitsi-videobridge connect.
+describe port(5347) do
+  it { should be_listening }
+  it { should be_listening.on('127.0.0.1') }
+  it { should_not be_listening.on('0.0.0.0') }
+end
+
+describe command('sudo netstat -nlt') do
+  its('stdout') { should match(/127\.0\.0\.1:5347/) }
+  its('stdout') { should_not match(/0\.0\.0\.0:5347/) }
+end
