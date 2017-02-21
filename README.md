@@ -30,7 +30,9 @@ jitsi_meet_ssl_key_path: ''
 # Without SSL, "localhost" is the correct default. If SSL info is provided,
 # then we'll need a real domain name. Using Ansible's inferred FQDN, but you
 # can set the variable value explicitly if you use a shorter hostname
-jitsi_meet_server_name: "{{ ansible_fqdn if jitsi_meet_ssl_cert_path else 'localhost' }}"
+# If automatic Nginx configuration is disabled, also use FQDN, since presumably
+# another role will manage the vhost config.
+jitsi_meet_server_name: "{{ ansible_fqdn if (jitsi_meet_ssl_cert_path or not jitsi_meet_configure_nginx) else 'localhost' }}"
 
 # Only "anonymous" auth is supported, which lets anyone use the videoconference server.
 jitsi_meet_authentication: anonymous
