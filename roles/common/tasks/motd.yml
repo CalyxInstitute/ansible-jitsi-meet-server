@@ -1,0 +1,16 @@
+---
+- name: Set hostname.
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Get the current kernel version string.
+  command: uname -a
+  register: kernel_version_string
+
+- name: Install motd (message of the day).
+  template:
+    src: motd.j2
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: "0644"

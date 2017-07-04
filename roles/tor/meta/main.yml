@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Kevin Gallagher (@ageis)
+  description: Installs Tor daemon.
+  company: Calyx Institute
+  license: MIT
+  min_ansible_version: 2.3.1
+  platforms:
+    - name: Debian
+      versions:
+      - stretch
+  categories:
+    - system
+dependencies: []

@@ -1,3 +1,7 @@
 ---
-- src: https://github.com/thefinn93/ansible-letsencrypt
-  name: thefinn93.letsencrypt
+# More info: http://dev-sec.io/docs/
+- src: https://github.com/dev-sec/ansible-os-hardening
+  name: ansible-os-hardening
+
+- src: https://github.com/dev-sec/ansible-ssh-hardening
+  name: ansible-ssh-hardening

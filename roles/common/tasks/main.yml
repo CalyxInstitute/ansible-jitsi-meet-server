@@ -1,0 +1,14 @@
+---
+- include: update_everything.yml
+- include: packages.yml
+- include: make_swap.yml
+- include: coredumps.yml
+- include: add_github_ssh_hostkey.yml
+- include: timezone.yml
+- include: motd.yml
+- include: auto_upgrades.yml
+- include: fail2ban.yml
+- include: journald.yml
+- include: pip.yml
+- include: tools.yml
+- include: ufw.yml

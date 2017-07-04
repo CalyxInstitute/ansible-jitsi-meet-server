@@ -1,0 +1,9 @@
+JICOFO_HOST=localhost
+JICOFO_HOSTNAME={{ jitsi_meet_server_name }}
+JICOFO_SECRET={{ jitsi_meet_jicofo_secret }}
+JICOFO_PORT=5347
+JICOFO_AUTH_DOMAIN=auth.{{ jitsi_meet_server_name }}
+JICOFO_AUTH_USER=focus
+JICOFO_AUTH_PASSWORD={{ jitsi_meet_jicofo_password }}
+JICOFO_OPTS=""
+JAVA_SYS_PROPS="-Dnet.java.sip.communicator.SC_HOME_DIR_LOCATION=/etc/jitsi -Dnet.java.sip.communicator.SC_HOME_DIR_NAME=jicofo -Dnet.java.sip.communicator.SC_LOG_DIR_LOCATION=/var/log/jitsi -Djava.util.logging.config.file=/etc/jitsi/jicofo/logging.properties"

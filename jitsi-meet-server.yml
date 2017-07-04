@@ -1,0 +1,26 @@
+---
+- name: Apply the Jitsi Meet server role.
+  become: yes
+  hosts: jitsi-meet-server
+  vars:
+    certbot_admin_email: ''
+    jitsi_meet_server_name: ''
+  roles:
+    - role: common
+      tags: server
+    - role: ansible-os-hardening
+      os_auth_pam_passwdqc_enable: false
+      os_auth_pw_max_age: 730
+      os_auth_lockout_time: 300
+      tags: security
+    - role: ansible-ssh-hardening
+      sftp_enabled: true
+      tags: security
+    - role: tor
+      tags: tor
+    - role: certbot
+      tags: letsencrypt
+    - role: ansible-role-jitsi-meet
+      tags: jitsi
+      jitsi_meet_ssl_cert_path: "/etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem"
+      jitsi_meet_ssl_key_path: "/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem"

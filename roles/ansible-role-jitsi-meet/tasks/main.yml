@@ -1,0 +1,14 @@
+---
+- include: packages.yml
+
+- include: dynamic_vars.yml
+
+- include: prosody.yml
+
+- include: jitsi_meet.yml
+
+- include: jicofo.yml
+
+- include: nginx.yml
+
+- include: clean_up_default_configs.yml

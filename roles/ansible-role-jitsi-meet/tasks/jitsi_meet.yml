@@ -1,0 +1,42 @@
+---
+- name: Copy Jitsi Meet JS config file.
+  template:
+    dest: "/etc/jitsi/meet/{{ jitsi_meet_server_name }}-config.js"
+    src: jitsi_meet_config.js.j2
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart jitsi-videobridge
+
+- name: Copy jitsi-videobridge SIP communicator settings.
+  template:
+    dest: "/etc/jitsi/videobridge/sip-communicator.properties"
+    src: sip-communicator.jvb.j2
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart jitsi-videobridge
+
+- name: Set jitsi-videobridge log level.
+  lineinfile:
+    dest: /etc/jitsi/videobridge/logging.properties
+    regexp: '^\.level'
+    line: ".level=WARNING"
+    state: present
+  notify: restart jitsi-videobridge
+
+- name: Create directory for SIP communicator settings.
+  file:
+    state: directory
+    path: /usr/share/jitsi-videobridge/.sip-communicator
+    owner: jvb
+    group: jitsi
+  notify: restart jitsi-videobridge
+
+- name: Symlink SIP communicator settings.
+  file:
+    path: "/usr/share/jitsi-videobridge/.sip-communicator/sip-communicator.properties"
+    src: "/etc/jitsi/videobridge/sip-communicator.properties"
+    state: link
+    owner: root
+    group: root

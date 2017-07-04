@@ -1,0 +1,38 @@
+---
+- name: Remove default localhost Jitsi Meet config file.
+  file:
+    path: /etc/jitsi/meet/localhost-config.js
+    state: absent
+  notify: restart jitsi-videobridge
+
+- name: Remove Jicofo user config for localhost site.
+  file:
+    path: /var/lib/prosody/auth%2elocalhost
+    state: absent
+  notify:
+    - restart jicofo
+    - restart prosody
+
+- name: Remove default localhost Prosody config file.
+  file:
+    path: /etc/prosody/conf.d/localhost.cfg.lua
+    state: absent
+  notify: restart prosody
+
+- name: Remove default localhost Prosody TLS certs and keys.
+  file:
+    path: "{{ item[0] }}/localhost.{{ item[1] }}"
+    state: absent
+  notify: restart prosody
+  with_nested:
+    - [ "/etc/prosody/certs", "/var/lib/prosody" ]
+    - [ "key", "crt" ]
+
+- name: Remove default localhost Nginx config file.
+  file:
+    path: "{{ item }}"
+    state: absent
+  notify: restart nginx
+  with_items:
+    - /etc/nginx/sites-available/localhost.conf
+    - /etc/nginx/sites-enabled/localhost.conf

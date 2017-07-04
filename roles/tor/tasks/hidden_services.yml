@@ -1,0 +1,24 @@
+---
+- name: Include hidden service in configuration.
+  blockinfile:
+    dest: /etc/tor/torrc
+    block: |
+      HiddenServiceDir /var/lib/tor/jitsi-meet/
+      HiddenServicePort 80 127.0.0.1:80
+
+- name: Reload Tor.
+  service:
+    name: tor
+    state: reloaded
+
+- name: Wait a second for the Tor hidden service to be initialized.
+  pause:
+    seconds: 1
+
+- name: Figure out Tor hidden service hostname.
+  shell: "cat /var/lib/tor/jitsi-meet/hostname"
+  register: tor_hidden_service
+
+- name: Show Tor hidden service hostname.
+  debug:
+    msg: "Jitsi Meet is available via Tor at: {{ tor_hidden_service.stdout }}"

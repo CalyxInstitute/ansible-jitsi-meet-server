@@ -1,0 +1,53 @@
+---
+- name: Add signing key for Tor Project.
+  apt_key:
+    keyserver: keys.gnupg.net
+    id: EE8CBC9E886DDD89
+
+- name: Install Tor Project apt repository.
+  apt_repository:
+    repo: "deb http://deb.torproject.org/torproject.org/ stretch main"
+    state: present
+  register: add_tor_repo
+
+- name: Update apt cache.
+  apt:
+    update_cache: yes
+  when: add_tor_repo.changed
+
+- name: Install Tor.
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - tor
+    - deb.torproject.org-keyring
+
+- name: Configure Tor logging and additional options.
+  lineinfile:
+    dest: /etc/tor/torrc
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: "^SafeLogging"
+      line: "SafeLogging 0"
+    - regexp: "^Sandbox"
+      line: "Sandbox 0"
+    - regexp: "^Log info"
+      line: "Log info file /var/log/tor/info.log"
+    - regexp: "^Log notice"
+      line: "Log notice file /var/log/tor/notice.log"
+    - regexp: "^ControlPort"
+      line: "ControlPort 9051"
+    - regexp: "^CookieAuthentication"
+      line: "CookieAuthentication 1"
+  tags: config
+  notify: restart tor
+
+- name: Modify logrotate policy to keep stuff around longer.
+  lineinfile:
+    dest: /etc/logrotate.d/tor
+    regexp: "^	rotate"
+    line: "	rotate {{ tor_log_retention_days }}"
+    state: present

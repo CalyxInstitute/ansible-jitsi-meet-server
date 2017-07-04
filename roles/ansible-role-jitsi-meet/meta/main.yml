@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author:
+    - Kevin Gallagher (@ageis)
+    - Conor Schaefer (@conorsch)
+  description: Installs Jitsi Meet videoconferencing software.
+  company: Calyx Institute
+  license: MIT
+  min_ansible_version: 2.3.1
+  platforms:
+    - name: Debian
+      versions:
+      - jessie
+      - stretch
+  categories:
+    - system
+dependencies: []
